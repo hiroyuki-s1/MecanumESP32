@@ -8,23 +8,18 @@
 #include "driver/pcnt.h"
 #include "esp_attr.h"
 #include "esp_log.h"
+#include "pcnt_counter.hpp"
 
 namespace odom{
-
-    typedef struct {
-        int unit;  // the PCNT unit that originated an interrupt
-        uint32_t status; // information on the event type that caused the interrupt
-    } pcnt_evt_t;
-
-
     class Odometry {
         public:
             Odometry();
-            void run_test();
-            static xQueueHandle _pcnt_evt_queue;
-            static void IRAM_ATTR _pcnt_intr_handler(void *arg);
+            void update();
         private:
-            void _pcnt_init(int unit);
+            pcnt_counter::PcntCounter* _front_r_pcnt;
+            pcnt_counter::PcntCounter* _front_l_pcnt;
+            pcnt_counter::PcntCounter* _rear_r_pcnt;
+            pcnt_counter::PcntCounter* _rear_l_pcnt;
     };
     
 }

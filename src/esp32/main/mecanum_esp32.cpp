@@ -3,7 +3,7 @@
 
 MecanumESP32::MecanumESP32(){
     // 各モジュール初期化
-    // _odom = new odom::Odometry();
+    _odom = new odom::Odometry();
 
     ESP_LOGI(common::TAG_MAIN, "########################################");
     ESP_LOGI(common::TAG_MAIN, "## MECANUM ESP32 MOTOR DRIVER " );
@@ -13,13 +13,15 @@ MecanumESP32::MecanumESP32(){
 }
 
 void MecanumESP32::run_loop(){
-    _odom->run_test();
+    _odom->update();
 }
 
 extern "C" void app_main(void)
 {
     MecanumESP32* esp32 = new MecanumESP32();
-    esp32->run_loop();
-
+    while(1){
+        esp32->run_loop();
+        vTaskDelay(200/portTICK_PERIOD_MS);
+    }
     delete esp32;
 }
