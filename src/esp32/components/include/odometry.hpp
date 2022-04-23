@@ -1,6 +1,6 @@
 #ifndef __ODOMETORY__
 #define __ODOMETORY__
-
+#include <vector>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/queue.h"
@@ -15,11 +15,22 @@ namespace odom{
         public:
             Odometry();
             void update();
+            void set_config(double rotate_pulse_count);
         private:
-            pcnt_counter::PcntCounter* _front_r_pcnt;
-            pcnt_counter::PcntCounter* _front_l_pcnt;
-            pcnt_counter::PcntCounter* _rear_r_pcnt;
-            pcnt_counter::PcntCounter* _rear_l_pcnt;
+            // パルスカウント
+            std::vector<pcnt_counter::PcntCounter*> _pcnt_counter;
+
+            // オドメトリ計算用ホイールパラメータ
+            double _wheel_width, _wheel_height; // 機体の幅、高さ
+            double _roller_rad; // ローラ角度
+            
+            // オドメトリ変数
+            std::vector<double> _v_vec;
+            double _dt; //　更新周期
+            std::vector<double> _motor_verocity_rad; // 角モータの角速度
+            double _rotate_puluse_count; // １回転したときのパルス数           
+
+            void _calc_motor_vecoity(); 
     };
     
 }

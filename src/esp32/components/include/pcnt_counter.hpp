@@ -19,10 +19,13 @@ namespace pcnt_counter{
     class PcntCounter {
         public:
             PcntCounter(int pcnt_unit, int layer_a, int layer_b, 
-            int16_t h_limit, int16_t l_limit, int channel);
+            int16_t h_limit, int16_t l_limit, int channel, int index);
             void update();
             int16_t pulse_count; // パルスカウント
+            int16_t prev_pulse_count;
             int64_t count_around;
+            int64_t prev_count_around;
+            void resume(bool service);
         private:
             void _pcnt_init();
             static xQueueHandle _pcnt_evt_queue;
@@ -34,6 +37,7 @@ namespace pcnt_counter{
             int _pcnt_channel;
             pcnt_evt_t _evt;
             portBASE_TYPE _res;
+            int _index;
     };
     
 }

@@ -28,9 +28,9 @@ namespace pcnt_counter{
      * @param callback_limit_burst_h  カウント満了時のコールバック関数(最小)
      */
     PcntCounter::PcntCounter(int pcnt_unit, int layer_a, int layer_b, 
-            int16_t h_limit, int16_t l_limit, int channel
+            int16_t h_limit, int16_t l_limit, int channel, int index
             ) : _pcnt_unit(pcnt_unit), _layer_a(layer_a), _layer_b(layer_b),
-            _h_limit(h_limit), _l_limit(l_limit), _pcnt_channel(channel)
+            _h_limit(h_limit), _l_limit(l_limit), _pcnt_channel(channel), _index(index)
     {
         _pcnt_unit_type = static_cast<pcnt_unit_t>(_pcnt_unit);
         count_around = 0;
@@ -75,11 +75,21 @@ namespace pcnt_counter{
         pcnt_counter_clear(pcnt_unit);
 
         /* Install interrupt service and add isr callback handler */
-        pcnt_isr_service_install(0);
-        pcnt_isr_handler_add(pcnt_unit, _pcnt_intr_handler,(void *)_pcnt_unit);
+        // pcnt_isr_service_install(0);
+        // pcnt_isr_handler_add(pcnt_unit, _pcnt_intr_handler,(void *)_pcnt_unit);
 
         /* Everything is set up, now go to counting */
+        // pcnt_counter_resume(pcnt_unit);
+    }
+
+    void PcntCounter::resume(bool service){
+        pcnt_unit_t pcnt_unit = static_cast<pcnt_unit_t>(_pcnt_unit);
+        if(service){
+            pcnt_isr_service_install(0);
+        }
+        pcnt_isr_handler_add(pcnt_unit, _pcnt_intr_handler,(void *)_pcnt_unit);
         pcnt_counter_resume(pcnt_unit);
+
     }
 
     /**
@@ -88,6 +98,8 @@ namespace pcnt_counter{
      */
     void PcntCounter::update(){
         _res = xQueueReceive(_pcnt_evt_queue, &_evt, WAKE_TIME / portTICK_PERIOD_MS);
+        prev_count_around = count_around;
+        prev_pulse_count = pulse_count;
         pcnt_get_counter_value(_pcnt_unit_type, &pulse_count);
         if (_res == pdTRUE) {
             if (_evt.status & PCNT_EVT_L_LIM) {
