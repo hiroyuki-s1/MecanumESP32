@@ -16,6 +16,14 @@ namespace odom{
             Odometry();
             void update();
             void set_config(double rotate_pulse_count);
+            double* get_pcnt_dt(int index){
+                return &(_pcnt_counter[index]->dt);
+            }
+
+            double* get_motor_velocity_rad(int i){
+                return &_motor_verocity_rad[i];
+            }
+
         private:
             // パルスカウント
             std::vector<pcnt_counter::PcntCounter*> _pcnt_counter;

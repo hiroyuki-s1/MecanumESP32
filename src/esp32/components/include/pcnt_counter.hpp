@@ -26,6 +26,7 @@ namespace pcnt_counter{
             int64_t count_around;
             int64_t prev_count_around;
             void resume(bool service);
+            double dt;
         private:
             void _pcnt_init();
             static xQueueHandle _pcnt_evt_queue;
@@ -38,6 +39,7 @@ namespace pcnt_counter{
             pcnt_evt_t _evt;
             portBASE_TYPE _res;
             int _index;
+            int64_t _last_get_us_time;
     };
     
 }

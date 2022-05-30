@@ -10,5 +10,9 @@ namespace common{
     static uint32_t millis(){
         return (uint32_t)(esp_timer_get_time() / 1000ULL);
     }
+
+    static int64_t usecs(){
+        return esp_timer_get_time();
+    }
 }
 #endif

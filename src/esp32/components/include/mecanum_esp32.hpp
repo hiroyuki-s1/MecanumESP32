@@ -19,4 +19,7 @@ class MecanumESP32 {
     private:
         odom::Odometry* _odom;
         uint32_t _last_loop_time;
+        uint32_t _last_staus_print;
+
+        void _status_print();
 };

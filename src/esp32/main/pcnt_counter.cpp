@@ -101,6 +101,10 @@ namespace pcnt_counter{
         prev_count_around = count_around;
         prev_pulse_count = pulse_count;
         pcnt_get_counter_value(_pcnt_unit_type, &pulse_count);
+        // pulse_count = 0;
+        this->dt = (double)(common::usecs() - _last_get_us_time) / 1000000;
+        // ESP_LOGI(common::TAG_MAIN, "dt:%lf",this->dt);
+        _last_get_us_time = common::usecs();
         if (_res == pdTRUE) {
             if (_evt.status & PCNT_EVT_L_LIM) {
                 ESP_LOGI(common::TAG_MAIN, "L_LIM EVT");

@@ -32,12 +32,12 @@ namespace config{
     static const int REAR_LEFT_ENC_LAYER_B     = 26;
 
     // オドメトリ計算デフォルトパラメータ
-    static const int DT_MS = 16;
-    static const double DT_SEC =  (double)DT_MS / 1000;
     static const int PULSE_ROTATION_COUNT_DEFAULT = 700; 
     static const double ROLLER_ANGLE_DEFAULT = M_PI/4; 
     static const double WHEEL_BASE_DEFAULT = 0.4;
-
+    
+    // デバッグ設定
+    static const uint32_t STATUS_PRINT_MS = 100;
 }
 
 #endif
